@@ -1,9 +1,11 @@
 import os
 import bs4
 import json
+import time
 import pickle
 import tweepy
 import requests
+import datetime
 import settings_log
 import logging.config
 
@@ -48,8 +50,9 @@ for page_num in page_nums:
     except Exception as e:
         logger.error("Error at requests")
         logger.exception("Raise Exception : %s", e)
+    time.sleep(1)
     r.encoding = r.apparent_encoding
-    soup = bs4.BeautifulSoup(r.text)
+    soup = bs4.BeautifulSoup(r.text, "html.parser")
     
     info_recruit = soup.find("ul", attrs={"id": "recruit"})
     info_each = info_recruit.find_all("li")
@@ -59,19 +62,19 @@ for page_num in page_nums:
         dic["300"] = url
         list_tod.append(dic)
 
-with open(savefile, "wb") as f:
-    pickle.dump(list_tod, f, -1)
-
 list_yest = []
 with open(savefile, 'rb') as f:
     list_yest = pickle.load(f)
+
+with open(savefile, "wb") as f:
+    pickle.dump(list_tod, f, -1)
 
 #check if tweeted the infomation
 list_tweet = []
 for article in list_tod:
     if article not in list_yest:
         list_tweet.append(article)
-
+        
 #setting detail of tweet
 list_label_to_tweet = ["1", "3", "100", "104", "300"]
 lim_len = {"1": 15, "3": 15, "100": 40, "101": 20, "103": 20, "104": 15, "300": 60}
@@ -92,3 +95,16 @@ for detail in list_tweet:
     except Exception as e:
         logger.error("Error at tweet")
         logger.exception("Raise Exception : %s", e)
+
+        
+if len(list_tweet)==0:
+    content = "There is no new information right now.\n"
+    content += str(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))))
+    try:
+        tweet(content)
+        logger.info("success to tweet")
+        logger.info("msg : %s", content)
+    except Exception as e:
+        logger.error("Error at tweet")
+        logger.exception("Raise Exception : %s", e)
+    
