@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# encoding: utf-8
 import os
 import bs4
 import json
@@ -30,10 +32,10 @@ def scrape_each(info_each):
     return dic
 
 def tweet(content):
-    consumer_key = os.environ["CONSUMER_KEY"]
-    consumer_secret = os.environ["CONSUMER_SECRET"]
-    access_token = os.environ["ACCESS_TOKEN"]
-    access_token_secret = os.environ["ACCESS_TOKEN_SECRET"]
+    consumer_key=os.environ["CONSUMER_KEY"]
+    consumer_secret=os.environ["CONSUMER_SECRET"]
+    access_token=os.environ["ACCESS_TOKEN"]
+    access_token_secret=os.environ["ACCESS_TOKEN_SECRET"]
 
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
@@ -95,16 +97,3 @@ for detail in list_tweet:
     except Exception as e:
         logger.error("Error at tweet")
         logger.exception("Raise Exception : %s", e)
-
-        
-if len(list_tweet)==0:
-    content = "There is no new information right now.\n"
-    content += str(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))))
-    try:
-        tweet(content)
-        logger.info("success to tweet")
-        logger.info("msg : %s", content)
-    except Exception as e:
-        logger.error("Error at tweet")
-        logger.exception("Raise Exception : %s", e)
-    
