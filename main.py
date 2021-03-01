@@ -9,7 +9,7 @@ import datetime
 import settings_log
 import logging.config
 
-savefile = "list.pkl"
+savefile = os.path.dirname(os.path.abspath(__file__)) + "/" + "list.pkl"
 page_nums = ["0", "1", "2"]
 label = {"0":"掲載日", "1":"企業名", "2": "担当者氏名", "3": "業種", "4": "所在地", "5": "電話番号", "100": "内容", "101": "勤務場所", "102": "勤務期間", "103": "勤務時間", "104": "賃金", "105": "募集人数", "106": "交通費", "107": "給与支払", "200": "採用の決め方", "201": "連絡事項", "202": "リンク先", "300": "詳細"}
 
